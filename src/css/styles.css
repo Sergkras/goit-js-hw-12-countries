@@ -8,6 +8,12 @@
     height: 50px;
     }
   
+
+.countries-list {
+padding-left: 20px;
+padding-right: 20px;
+}
+
   .container-4 {
     overflow: hidden;
     width: 300px;
