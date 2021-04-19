@@ -4,7 +4,7 @@
        
   .box {
     margin: 100px auto;
-    width: 300px;
+    width: 320px;
     height: 50px;
     }
   
@@ -21,7 +21,7 @@ padding-left: 0px;
     white-space: nowrap;
   }
   .container-4 input#search {
-    width: 300px;
+    width: 320px;
     height: 50px;
     background: #2b303b;
     border: none;
