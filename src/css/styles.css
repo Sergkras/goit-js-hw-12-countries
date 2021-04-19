@@ -14,6 +14,11 @@
 padding-left: 0px;
 }
 
+.list {
+padding-left: 20px;
+padding-right: 20px;
+}
+
   .container-4 {
     overflow: hidden;
     width: 300px;
