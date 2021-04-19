@@ -6,7 +6,7 @@ const refs = {
     form: document.querySelector('form'),
 }
 
-const BASE_URL = "https://restcountries.eu/rest/v2/name/USA";
+const BASE_URL = "https://restcountries.eu/rest/v2/name/usa";
 
 fetch(`${BASE_URL}`)
     .then(response => {
