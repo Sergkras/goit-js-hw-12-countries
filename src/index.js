@@ -1,12 +1,12 @@
 import './css/styles.css';
-import countryCardTpl from './tmp/countryCard.hbs'
+import countryCardRef from './tmp/countryCard.hbs'
 const refs = {
-    inputField: document.querySelector('#search'),
+    inputRef: document.querySelector('#search'),
     countriesList: document.querySelector('.countries-list'),
-    form: document.querySelector('.js-search-form'),
+    form: document.querySelector('form'),
 }
-  
-const BASE_URL = "https://restcountries.eu/rest/v2/name/ukr";
+
+const BASE_URL = "https://restcountries.eu/rest/v2/name/USA";
 
 fetch(`${BASE_URL}`)
     .then(response => {
@@ -14,7 +14,7 @@ fetch(`${BASE_URL}`)
     })
     .then(name => {
     // console.log(name);
-    const markup = countryCardTpl(...name);
+    const markup = countryCardRef(...name);
     // console.log(markup);
     refs.countriesList.innerHTML = markup;
     })
