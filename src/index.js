@@ -1,23 +1,40 @@
 import './css/styles.css';
-import countryCardRef from './tmp/countryCard.hbs'
+import countryCard from './tmp/countryCard.hbs'
+import countryList from './tmp/countryList.hbs';
+import debounce from 'lodash.debounce';
 const refs = {
-    inputRef: document.querySelector('#search'),
-    countriesList: document.querySelector('.countries-list'),
-    form: document.querySelector('form'),
+    inputField: document.querySelector('#search'),
+    countriesList: document.querySelector('.countries-list')
+    };
+  
+ refs.inputField.addEventListener('input', debounce(onSearch, 600));
+
+ function onSearch(e) {
+e.preventDefault();
+// получаем значение инпута
+const searchQuery = refs.inputField.value;
+
+// значение инпута в аргумент для ф-и поиска
+fetchCountries (searchQuery)
+.then(renderCard)
+.catch(onFetchError)
+.finally(() => refs.inputField.value ='');
 }
 
-const BASE_URL = "https://restcountries.eu/rest/v2/name/usa";
 
-fetch(`${BASE_URL}`)
-    .then(response => {
-    return response.json();
-    })
-    .then(name => {
-    // console.log(name);
-    const markup = countryCardRef(...name);
-    // console.log(markup);
-    refs.countriesList.innerHTML = markup;
-    })
-    .catch(error => {
-        console.log(error);
-    });
+// ф-я поиска
+function fetchCountries (name) {
+    return fetch(`https://restcountries.eu/rest/v2/name/${name}`).then(response => {
+    return response.json();  
+        });
+    }
+
+function onFetchError(error) {
+showError('This country not found')
+}
+
+//разметка 
+function renderCard (name) {
+ const markup = countryCard(...name);   
+ refs.countriesList.innerHTML = markup;
+};
