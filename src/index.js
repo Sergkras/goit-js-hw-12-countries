@@ -1,40 +1,49 @@
 import './css/styles.css';
+import { showAlert, showError } from './pnotify';
+
 import countryCard from './tmp/countryCard.hbs'
-import countryList from './tmp/countryList.hbs';
+import countriesList from './tmp/countryList.hbs';
 import debounce from 'lodash.debounce';
+ 
 const refs = {
     inputField: document.querySelector('#search'),
-    countriesList: document.querySelector('.countries-list')
+    listCountries: document.querySelector('.countries-list')
     };
-  
- refs.inputField.addEventListener('input', debounce(onSearch, 600));
+ 
+ refs.inputField.addEventListener('input', debounce(onSearch, 500));
 
- function onSearch(e) {
-e.preventDefault();
-// получаем значение инпута
-const searchQuery = refs.inputField.value;
-
-// значение инпута в аргумент для ф-и поиска
-fetchCountries (searchQuery)
-.then(renderCard)
-.catch(onFetchError)
-.finally(() => refs.inputField.value ='');
-}
-
-
-// ф-я поиска
-function fetchCountries (name) {
-    return fetch(`https://restcountries.eu/rest/v2/name/${name}`).then(response => {
-    return response.json();  
+ function fetchCountries(name) {
+    return fetch(`https://restcountries.eu/rest/v2/name/${name}`)
+	.then(response => {
+      if (!response.ok) {
+	       return showError('This country not found');
+           
+     } else {
+	       return response.json();  
+	    }
         });
     }
-
-function onFetchError(error) {
-showError('This country not found')
+function onSearch(e) {
+e.preventDefault();
+const searchQuery = refs.inputField.value;
+fetchCountries(searchQuery)
+       .then(renderCard)
+       .catch(showError('This country not found'))
+       .finally(() => refs.inputField.value ='');
 }
 
-//разметка 
-function renderCard (name) {
- const markup = countryCard(...name);   
- refs.countriesList.innerHTML = markup;
+function renderCard(country) {
+ if (country.length > 1) {
+const markup = countriesList(country);   
+ refs.listCountries.innerHTML = markup;
+
+        if  (country.length > 10) {
+           return showAlert('Too many matches found. Please enter a more specific query!');
+            }
+       }
+else {        
+        const markup = countryCard(...country);
+        refs.listCountries.innerHTML = markup;
+  }
 };
+
