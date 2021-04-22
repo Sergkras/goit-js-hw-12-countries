@@ -1,26 +1,28 @@
-import { alert, notice, info, success, error } from '@pnotify/core';
-// or
-const { alert, notice, info, success, error } = require('@pnotify/core');
+import { alert, error } from '@pnotify/core';
+import "@pnotify/core/dist/PNotify.css";
+import "@pnotify/core/dist/BrightTheme.css";
 
-// Manually set the type.
-const myAlert = alert({
-  text: "I'm an alert.",
-  type: 'info'
-});
-
-// Automatically set the type.
-const myNotice = notice({
-  text: "I'm a notice."
-});
-
-const myInfo = info({
-  text: "I'm an info message."
-});
-
-const mySuccess = success({
-  text: "I'm a success message."
-});
-
-const myError = error({
-  text: "I'm an error message."
-});
+function showAlert(text) {
+  alert({
+    title: "Attention",
+    text:
+      `${text}`,
+    modules: new Map([
+      [
+        Confirm,
+        {
+          confirm: true,
+          buttons: [
+            {
+              text: "Ok",
+              primary: true,
+              click: notice => {
+                notice.close(500);
+              }
+            }
+          ]
+        }
+      ]
+    ])
+  });
+}
