@@ -10,9 +10,7 @@ function showAlert(text) {
     text:
       `${text}`,
     modules: new Map([
-      [
-        Confirm,
-        {
+      [ Confirm,         {
           confirm: true,
           buttons: [
             {
@@ -28,3 +26,26 @@ function showAlert(text) {
     ])
   });
 }
+
+function showError(text) {
+     error({
+    title: "Error",
+    text:
+      `${text}`,
+    modules: new Map([ [
+        Confirm,
+        { confirm: true,
+          buttons: [ {
+              text: "Ok",
+              primary: true,
+              click: notice => {
+                notice.close(500);
+              }
+            }
+          ]
+        }
+      ]
+    ])
+  });
+}
+export { showAlert, showError };
