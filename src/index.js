@@ -16,21 +16,25 @@ const refs = {
     return fetch(`https://restcountries.eu/rest/v2/name/${name}`)
 	.then(response => {
       if (!response.ok) {
-	       return showError('This country not found');
-           
-     } else {
+	       return fetchError(error);
+       } else {
 	       return response.json();  
 	    }
         });
     }
+   
 function onSearch(e) {
 e.preventDefault();
 const searchQuery = refs.inputField.value;
 fetchCountries(searchQuery)
        .then(renderCard)
-       .catch(showError('This country not found'))
+       .catch(fetchError)
        .finally(() => refs.inputField.value ='');
 }
+
+function fetchError(error) {
+    showError('This country not found')
+   }
 
 function renderCard(country) {
  if (country.length > 1) {
@@ -46,4 +50,3 @@ else {
         refs.listCountries.innerHTML = markup;
   }
 };
-
