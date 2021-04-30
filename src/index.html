@@ -4,21 +4,28 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>goit-js-hw-12-countries</title>
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+    <title>goit-js-hw-13-image-finder</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+  rel="stylesheet"/>
     </head>
   <body class="body">
 
-      <div class="box">
-        <form class="container form">
-          <input type="search" id="search" placeholder="Search...">
-          <div class="form-error-box"></div>
-          <button type="input" class="icon btn"><i class="fa fa-search"></i></button>
-        </form>
-
-        <ul class="countries-list"></ul>
+    <article class="intro">
+      <form class="search-form" id="search-form">
+        <input type="text" name="query" autocomplete="off" placeholder="Search images..." />
+        <button type="submit" class="btn btn-search">Search</button>
+      </form>
+      <div class="container">
+        <ul class="gallery">
+        <!-- карточки изображений -->
+        </ul>
+        <button type="button" class="btn btn-primary button btn-bott" data-action="load-more">
+                 
+          <span class="label">Show more</span> 
+        </button>
       </div>
-
+    <div id='sentimel' ></div>
+    </article>
   </body>
 
     </html>
