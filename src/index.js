@@ -1,78 +1,52 @@
 import './css/styles.css';
-import imageCard from './temp/card-list.hbs';
-import getRefs from './js/get-refs';
-import ImagesApiService from './js/images-service';
-import { showAlert, showError } from './js/pnotify';
-import LoadMoreBtn from './js/load-more-btn';
+import { showAlert, showError } from './pnotify';
 
+import countryCard from './tmp/countryCard.hbs'
+import countriesList from './tmp/countryList.hbs';
+import debounce from 'lodash.debounce';
+ 
+const refs = {
+    inputField: document.querySelector('#search'),
+    listCountries: document.querySelector('.countries-list')
+    };
+ 
+ refs.inputField.addEventListener('input', debounce(onSearch, 500));
 
-const refs = getRefs();
-
-refs.searchRef.addEventListener('submit', onSearch);
-refs.loadMoreBtn.addEventListener('click', onLoadMore);
-
-const loadMoreBtn = new LoadMoreBtn({
-  selector: '[data-action="load-more"]',
-  hidden: true,
-});
-
-const imagesApiService = new ImagesApiService();
-
-async function onSearch(e) {
-    e.preventDefault();
-
-    clearImageList();
-    imagesApiService.query = e.currentTarget.elements.query.value;
-    loadMoreBtn.show();
-    loadMoreBtn.disable();
-    try {
-        imagesApiService.resetPage();
-        const response = await imagesApiService.fetchImages();
-        const render = await renderImageList(response);
-        loadMoreBtn.enable();
-        return render;
+ function fetchCountries(name) {
+    return fetch(`https://restcountries.eu/rest/v2/name/${name}`)
+	.then(response => {
+      if (!response.ok) {
+	       return fetchError(error);
+       } else {
+	       return response.json();  
+	    }
+        });
     }
-    catch {
-        onShowError();
-    }
-    finally {
-        refs.searchRef.query.value = '';
-    }
+   
+function onSearch(e) {
+e.preventDefault();
+const searchQuery = refs.inputField.value;
+fetchCountries(searchQuery)
+       .then(renderCard)
+       .catch(fetchError)
+       .finally(() => refs.inputField.value ='');
 }
 
-function renderImageList(hits) {
-     if (imagesApiService.query === '') {
-         return showAlert('Invalid request. Please try again')
-     }
-     else{
-         refs.cardContainer.insertAdjacentHTML('beforeend', imageCard(hits));
-    }
-}
+function fetchError(error) {
+    showError('This country not found')
+   }
 
-function onLoadMore() {
-    loadMoreBtn.disable();
-    imagesApiService.fetchImages().then(hits => {
-        renderImageList(hits)
-        loadMoreBtn.enable();
-    });
-}
-function clearImageList() {
-    refs.cardContainer.innerHTML = '';
-}
-function onShowError(error) {
-        showError('The request is incorrect. Please try again.');
-}
+function renderCard(country) {
+ if (country.length > 1) {
+const markup = countriesList(country);   
+ refs.listCountries.innerHTML = markup;
 
-// const onEntry = entries =>{
-//     entries.forEach(entry => {
-//         if (entry.Intersection) {
-//             console.log('ПОДГРУЖАЕМ');
-//         }
-//      });
-// }
-
-
-
-// const options = {};
-// const observer = new IntersectionObserver(onEntry, options);
-// observer.observe(refs.sentimel)
+        if  (country.length > 10) {
+           return showAlert('Too many matches found. Please enter a more specific query!');
+            }
+       }
+else {        
+        const markup = countryCard(...country);
+        refs.listCountries.innerHTML = markup;
+  }
+};
